@@ -9,12 +9,15 @@ import requests
 from PIL import Image
 import numpy as np
 
+from xrpl import getXRPAccountInfo
+
 step = 0
 name = "Name"
 description = "Description"
 chain = "Chain"
 registerFlow = False
 connectFlow = False
+accountFlow = False
 flowTransactionFlow = False
 
 import requests
@@ -461,10 +464,11 @@ def generate_text(prompt):
     return generated_text
 
 
-welcome_message = """Hi - welcome to FaceLink! How can I help?
+welcome_message = """Hi - welcome to Face2XRP! How can I help?
         
 Type "Register" to get started!
-Type "Connect" to connect with anyone with an image of their face!
+Type "Account" to view your account details!
+Type "Transaction" to send XRP to anyone with an image of their face!
 """
 
 
@@ -494,6 +498,7 @@ def get_response(message_string: str, message: any, is_private: any) -> str:
     global chain
     global registerFlow
     global connectFlow
+    global accountFlow
     global flowTransactionFlow
 
     p_message = message_string.lower()
@@ -510,13 +515,19 @@ def get_response(message_string: str, message: any, is_private: any) -> str:
         
 Please type your XRP wallet address in the same message.
 
-E.g. "rPutaWQFztro5Rs9gE9Cybh1FR7t2P9Atu"
+E.g. "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn"
 """
 
     if p_message == "transaction":
         flowTransactionFlow = True
         return (
-            f"Please upload an image of the person you want to send a transaction to!"
+            f"Please upload an image of the person you want to send a transaction to! Type the amount in the message."
+        )
+    
+    if p_message == "account":
+        accountFlow = True
+        return (
+            f"Please upload an image of yourself to see your wallet info!"
         )
 
     if registerFlow:
@@ -533,7 +544,6 @@ E.g. "rPutaWQFztro5Rs9gE9Cybh1FR7t2P9Atu"
             # not valid address
             return "Sorry, I didn't get a wallet address, please try again!"
         if message.attachments:
-            address = getETHAddressUsingMask(message_string)
 
             image_url = message.attachments[0].url
 
@@ -569,7 +579,7 @@ E.g. "rPutaWQFztro5Rs9gE9Cybh1FR7t2P9Atu"
 
             return f"""Registration Successful!
 
-You have linked your face: {uploadImageToIPFS(image_url)} (Stored on IPFS)
+You have linked your face: {image_url}
 
 To your wallet address: {discord_username}
 
@@ -615,11 +625,17 @@ With the following encoding: {str(face_encoding)[:200]}... [2681 more characters
                 print("Name: ", recipient)
                 print("The index of the first True element is:", index)
 
+                if accountFlow:
+                    accountFlow = False
+                    return getXRPAccountInfo(recipient)
+
                 if flowTransactionFlow:
                     flowTransactionFlow = False
+                    if (p_message == ""):
+                        return "No amount stated."
                     return f"""Face Recognition Successful! 
 
-Sending 1 XRP To {recipient}
+Sending {p_message} XRP To {recipient}
                 
 Image: {image_url} 
 
@@ -637,7 +653,7 @@ With the following encoding: {str(unknown_face_encoding)[:200]}... [2727 more ch
                     and len(recipient) == 10
                 ):
                     twiliomessage = client.messages.create(
-                        body=f"Hi, FaceLink here - {discordAuthor} wants to reach out to you! \n\n Their Discord username is {discordAuthor}. \n\n Their message for you is: {str(message_string)}",
+                        body=f"Hi, Face2XRP here - {discordAuthor} wants to reach out to you! \n\n Their Discord username is {discordAuthor}. \n\n Their message for you is: {str(message_string)}",
                         from_="+12295750071",
                         to=f"+1{wallet_to_phone[recipient]}",
                     )
