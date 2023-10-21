@@ -15,6 +15,7 @@ description = "Description"
 chain = "Chain"
 registerFlow = False
 connectFlow = False
+flowTransactionFlow = False
 
 import requests
 
@@ -493,6 +494,7 @@ def get_response(message_string: str, message: any, is_private: any) -> str:
     global chain
     global registerFlow
     global connectFlow
+    global flowTransactionFlow
 
     p_message = message_string.lower()
 
@@ -510,6 +512,12 @@ Please type your XRP wallet address in the same message.
 
 E.g. "rPutaWQFztro5Rs9gE9Cybh1FR7t2P9Atu"
 """
+
+    if p_message == "transaction":
+        flowTransactionFlow = True
+        return (
+            f"Please upload an image of the person you want to send a transaction to!"
+        )
 
     if registerFlow:
         print(message)
@@ -576,7 +584,7 @@ With the following encoding: {str(face_encoding)[:200]}... [2681 more characters
         print(wallet_to_encoding)
         return f"Let's get you connected! Please upload an image of the person you want to contact. \n\n In the same message, please write the message you want to send to them!"
 
-    if connectFlow or p_message == "":
+    if connectFlow or flowTransactionFlow or p_message == "":
         print(message)
 
         if message.attachments:
@@ -606,6 +614,19 @@ With the following encoding: {str(face_encoding)[:200]}... [2681 more characters
 
                 print("Name: ", recipient)
                 print("The index of the first True element is:", index)
+
+                if flowTransactionFlow:
+                    flowTransactionFlow = False
+                    return f"""Face Recognition Successful! 
+
+Sending 1 XRP To {recipient}
+                
+Image: {image_url} 
+
+Transaction Recipient: {recipient} (This can be hidden based on user privacy preferences)
+
+With the following encoding: {str(unknown_face_encoding)[:200]}... [2727 more characters]
+"""
 
                 discordAuthor = str(message.author)
 
