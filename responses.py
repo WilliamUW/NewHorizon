@@ -44,7 +44,7 @@ print(discord_token)
 wallet_to_phone = {"donaldtrump.eth": "4168807375", "barackobama.eth": "4168807375"}
 
 wallet_to_encoding = {
-    "donaldtrump.eth": [
+    "rDonaldTrumpXRPAddress1232131": [
         -0.14075439,
         0.11751342,
         0.00939059,
@@ -174,7 +174,7 @@ wallet_to_encoding = {
         0.01121672,
         0.04591377,
     ],
-    "barackobama.eth": [
+    "rBarackObamaXRPAddress1232131": [
         -0.0914344,
         0.13086095,
         0.01314385,
