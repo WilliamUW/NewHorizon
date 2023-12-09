@@ -11,6 +11,7 @@ import numpy as np
 
 from xrpl import getXRPAccountInfo
 
+applicationName = "RippleMatch"
 step = 0
 name = "Name"
 description = "Description"
@@ -18,6 +19,7 @@ chain = "Chain"
 registerFlow = False
 connectFlow = False
 accountFlow = False
+phoneFlow = False
 flowTransactionFlow = False
 
 import requests
@@ -32,6 +34,8 @@ w3 = w3storage.API(token="w3-api-token")
 
 
 config = dotenv_values(".env")  # Load .env file
+
+twilioEnabled = True
 
 # Access the API keys
 openai_api_key = config["OPENAI_API_KEY"]
@@ -464,9 +468,10 @@ def generate_text(prompt):
     return generated_text
 
 
-welcome_message = """Hi - welcome to Face2XRP! How can I help?
+welcome_message = f"""Hi - welcome to {applicationName}! How can I help?
         
-Type "Register" to get started!
+Type "Register" to connect your face to your XRP wallet!
+Type "Phone" to connect your phone to your XRP wallet!
 Type "Account" to view your account details!
 Type "Transaction" to send XRP to anyone with an image of their face!
 """
@@ -499,6 +504,7 @@ def get_response(message_string: str, message: any, is_private: any) -> str:
     global registerFlow
     global connectFlow
     global accountFlow
+    global phoneFlow
     global flowTransactionFlow
 
     p_message = message_string.lower()
@@ -594,7 +600,12 @@ With the following encoding: {str(face_encoding)[:200]}... [2681 more characters
         print(wallet_to_encoding)
         return f"Let's get you connected! Please upload an image of the person you want to contact. \n\n In the same message, please write the message you want to send to them!"
 
-    if connectFlow or flowTransactionFlow or p_message == "":
+    if p_message == "phone":
+        phoneFlow = True
+        print(str(wallet_to_phone))
+        return f"Let's get your phone connected! Please upload an image of yourself. \n\n In the same message, please write your phone number!"
+
+    if connectFlow or flowTransactionFlow or phoneFlow or p_message == "":
         print(message)
 
         if message.attachments:
@@ -628,6 +639,11 @@ With the following encoding: {str(face_encoding)[:200]}... [2681 more characters
                 if accountFlow:
                     accountFlow = False
                     return getXRPAccountInfo(recipient)
+                
+                if phoneFlow:
+                    wallet_to_phone[str(recipient)] = str(message_string)
+                    print(str(wallet_to_phone))
+                    return f"Phone added! {message_string}"
 
                 if flowTransactionFlow:
                     flowTransactionFlow = False
@@ -647,13 +663,15 @@ With the following encoding: {str(unknown_face_encoding)[:200]}... [2727 more ch
                 discordAuthor = str(message.author)
 
                 if (
+                    not phoneFlow and
+                    twilioEnabled and
                     recipient in wallet_to_phone
                     and message_string != ""
                     and recipient.isnumeric()
                     and len(recipient) == 10
                 ):
                     twiliomessage = client.messages.create(
-                        body=f"Hi, Face2XRP here - {discordAuthor} wants to reach out to you! \n\n Their Discord username is {discordAuthor}. \n\n Their message for you is: {str(message_string)}",
+                        body=f"Hi, {applicationName} here - {discordAuthor} wants to reach out to you! \n\n Their Discord username is {discordAuthor}. \n\n Their message for you is: {str(message_string)}",
                         from_="+12295750071",
                         to=f"+1{wallet_to_phone[recipient]}",
                     )
@@ -680,4 +698,4 @@ With the following encoding: {str(unknown_face_encoding)[:200]}... [2727 more ch
             return "Sorry, I didn't get an image, please try again!"
 
     else:
-        return generate_text(message)
+        return "Sorry, we ran into an issue. Please try again!"
