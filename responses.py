@@ -8,6 +8,7 @@ import skimage
 import requests
 from PIL import Image
 import numpy as np
+import openai
 
 from xrpl import getXRPAccountInfo
 
@@ -444,7 +445,6 @@ william_encoding = [
     -0.00806305,
 ]
 
-import openai
 
 
 def generate_text(prompt):
@@ -452,18 +452,26 @@ def generate_text(prompt):
     openai.api_key = openai_api_key
 
     # Define the model and parameters
-    model = "text-davinci-003"
+    model = "gpt-3.5-turbo-1106"
     max_tokens = 300  # Maximum number of tokens in the generated response
 
     prompt = "Concisely answer the following question: " + prompt
 
     # Generate text using the prompt
-    response = openai.Completion.create(
-        engine=model, prompt=prompt, max_tokens=max_tokens
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt},
+        ],
+        max_tokens=max_tokens
     )
 
+    print(response)
+
+
     # Extract the generated text from the API response
-    generated_text = response.choices[0].text.strip()
+    generated_text = response.choices[0].message.content
 
     return generated_text
 
@@ -698,4 +706,4 @@ With the following encoding: {str(unknown_face_encoding)[:200]}... [2727 more ch
             return "Sorry, I didn't get an image, please try again!"
 
     else:
-        return "Sorry, we ran into an issue. Please try again!"
+        return generate_text(message_string)
