@@ -9,8 +9,19 @@ import requests
 from PIL import Image
 import numpy as np
 import openai
+import requests
 
-from xrpl import getXRPAccountInfo
+from dotenv import dotenv_values
+import os
+from twilio.rest import Client
+
+import w3storage
+
+from xrpl import getXRPAccountInfo, makeXRPTransaction, sendXRPMessage
+
+w3 = w3storage.API(token="w3-api-token")
+config = dotenv_values(".env")  # Load .env file
+
 
 applicationName = "RippleMatch"
 step = 0
@@ -21,20 +32,9 @@ registerFlow = False
 connectFlow = False
 accountFlow = False
 phoneFlow = False
-flowTransactionFlow = False
+transactionFunction = makeXRPTransaction
+messageFunction = sendXRPMessage
 
-import requests
-
-from dotenv import dotenv_values
-import os
-from twilio.rest import Client
-
-import w3storage
-
-w3 = w3storage.API(token="w3-api-token")
-
-
-config = dotenv_values(".env")  # Load .env file
 
 # Access the API keys
 openai_api_key = config["OPENAI_API_KEY"]
