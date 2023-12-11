@@ -29,3 +29,26 @@ def getXRPAccountInfo(account):
 
 
 # getXRPAccountInfo("rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn")
+
+def makeXRPTransaction(sender, receiver, amount, secret):
+    # Define the request payload for making an XRP transaction
+    payload = {
+        "method": "submit",
+        "params": [
+            {
+                "tx_json": {
+                    "TransactionType": "Payment",
+                    "Account": sender,
+                    "Destination": receiver,
+                    "Amount": amount,
+                },
+                "secret": secret
+            }
+        ]
+    }
+    # Send the request and get the response
+    response = requests.post(url, json=payload)
+    # Print the response status code and content
+    print(response.status_code)
+    print(response.content)
+    return str(response.content)
