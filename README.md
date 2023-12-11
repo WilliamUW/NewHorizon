@@ -2,9 +2,10 @@
 
 ## Inspiration
 
-Have you ever experienced the frustration of losing touch with someone special, like a friend from a memorable summer camp or a connection made at a networking event? I certainly have. This realization led me to embark on the journey of creating RippleMatch.
+Have you ever experienced the frustration of wanting to contact somebody but only having a photo of them? Whether it is an old classmate from a yearbook, a stranger whose wallet you found, or 
+a new friend made at a crowded event, I certainly have! The struggle to reconnect is universal.
 
-I was reflecting on an old photo from a Grade 5 Summer Camp, recalling the joy of spending time with a friend whose name and contact information I had long forgotten. It felt like I had lost a precious connection forever. This personal experience inspired me to develop RippleMatch, a solution that combines the power of facial recognition with messaging and XRP transactions.
+That's why I am so excited to introduce RippleMatch! The solution that turns those cherished photos into a gateway for communication and transactions, allowing you to effortlessly reach out and send messages or XRP to anyone with just the power of their face. Say goodbye to missed connections and hello to a world where every face is a key to maintaining and building meaningful relationships.
 
 ## Introduction
 
@@ -28,17 +29,11 @@ Keep track of your XRP account balance and review past transactions effortlessly
 
 RippleMatch is built on a foundation of innovative technologies:
 
-### 1. Facial Recognition Technology
+Computer Vision: We used OpenCV and the Dlib C++ library to implement AI-based facial biometric encoding and recognition, ensuring secure and user-friendly transactions.
 
-We leverage state-of-the-art facial recognition algorithms, ensuring the secure identification of individuals for messaging and XRP transactions.
+XRPL Integration: We integrated the XRPL ledger HTTP API and the Python SDK to interact with the XRP Ledger, enabling account management and secure transactions.
 
-### 2. Messaging Integration with Twilio
-
-RippleMatch integrates with Twilio to enable seamless SMS messaging. Connect with friends and initiate conversations with the simplicity of facial recognition.
-
-### 3. XRP Transaction Processing
-
-RippleMatch utilizes the XRPL ledger HTTP API and Python SDK to access account balances, transaction history, and perform secure XRP transactions.
+Messaging Integration with Twilio: RippleMatch integrates with Twilio to enable seamless SMS messaging. Connect with friends and initiate conversations with the simplicity of facial recognition.
 
 ## Challenges and Accomplishments
 
@@ -53,4 +48,4 @@ As we continue to evolve RippleMatch, our future plans include:
 - **Multi-Cryptocurrency Support:** Expanding RippleMatch to support other cryptocurrencies and blockchain platforms.
 - **Collaboration for Continuous Improvement:** Partnering with security experts to enhance the biometric recognition system continually.
 
-RippleMatch is not just a project; it's a vision for the future of secure, user-friendly, and interconnected cryptocurrency transactions. Join us in shaping this future where connections are effortlessly maintained through the power of facial recognition and messaging. Welcome to RippleMatch!
+RippleMatch is not just a project; it's a vision for the future of secure, user-friendly, and interconnected cryptocurrency transactions. Join us in shaping this future where connections are effortlessly maintained through the power of facial recognition and messaging. Welcome to RippleMatch – where faces unlock a world of possibilities powered by XRP!
