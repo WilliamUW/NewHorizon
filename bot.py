@@ -3,18 +3,19 @@ import responses
 
 from dotenv import dotenv_values
 
-config = dotenv_values('.env')  # Load .env file
+config = dotenv_values(".env")  # Load .env file
 
 # Access the API keys
-openai_api_key = config['OPENAI_API_KEY']
-discord_token = config['DISCORD_TOKEN']
-
+openai_api_key = config["OPENAI_API_KEY"]
+discord_token = config["DISCORD_TOKEN"]
 
 
 async def send_message(message, user_message, is_private):
     try:
         response = responses.get_response(user_message, message, is_private)
-        await message.author.send(response) if is_private else await message.channel.send(response)
+        await message.author.send(
+            response
+        ) if is_private else await message.channel.send(response)
 
     except Exception as e:
         print(e)
@@ -28,7 +29,7 @@ def run_discord_bot():
 
     @client.event
     async def on_ready():
-        print(f'{client.user} is now running!')
+        print(f"{client.user} is now running!")
 
     @client.event
     async def on_message(message):
@@ -41,7 +42,7 @@ def run_discord_bot():
 
         print(f'{username} said: "{user_message}" ({channel})')
 
-        if user_message and user_message[0] == '?':
+        if user_message and user_message[0] == "?":
             user_message = user_message[1:]
             await send_message(message, user_message, is_private=True)
         else:

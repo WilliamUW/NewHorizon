@@ -181,7 +181,6 @@ william_encoding = [
 ]
 
 
-
 wallet_to_encoding = {
     "rDonaldTrumpXRPAddress1232131": [
         -0.14075439,
@@ -446,7 +445,6 @@ wallet_to_encoding = {
 }
 
 
-
 def generate_text(prompt):
     # Set up your OpenAI API credentials
     openai.api_key = openai_api_key
@@ -464,11 +462,10 @@ def generate_text(prompt):
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt},
         ],
-        max_tokens=max_tokens
+        max_tokens=max_tokens,
     )
 
     print(response)
-
 
     # Extract the generated text from the API response
     generated_text = response.choices[0].message.content
@@ -534,15 +531,11 @@ E.g. "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn"
 
     if p_message == "transaction":
         flowTransactionFlow = True
-        return (
-            f"Please upload an image of the person you want to send a transaction to! Type the amount in the message."
-        )
-    
+        return f"Please upload an image of the person you want to send a transaction to! Type the amount in the message."
+
     if p_message == "account":
         accountFlow = True
-        return (
-            f"Please upload an image of yourself to see your wallet info!"
-        )
+        return f"Please upload an image of yourself to see your wallet info!"
 
     if registerFlow:
         print(message)
@@ -558,7 +551,6 @@ E.g. "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn"
             # not valid address
             return "Sorry, I didn't get a wallet address, please try again!"
         if message.attachments:
-
             image_url = message.attachments[0].url
 
             img = get_image_from_url(image_url)
@@ -647,7 +639,7 @@ With the following encoding: {str(face_encoding)[:200]}... [2681 more characters
                 if accountFlow:
                     accountFlow = False
                     return getXRPAccountInfo(recipient)
-                
+
                 if phoneFlow:
                     phoneFlow = False
                     wallet_to_phone[str(recipient)] = str(message_string)
@@ -656,7 +648,7 @@ With the following encoding: {str(face_encoding)[:200]}... [2681 more characters
 
                 if flowTransactionFlow:
                     flowTransactionFlow = False
-                    if (p_message == ""):
+                    if p_message == "":
                         return "No amount stated."
                     return f"""Face Recognition Successful! 
 
