@@ -44,3 +44,30 @@ def makeXRPTransaction(sender, receiver, amount, secret):
     print(response.status_code)
     print(response.content)
     return str(response.content)
+
+
+def sendXRPMessage(sender, receiver, amount, secret, memos=None):
+    # Define the request payload for making an XRP transaction with optional memos
+    payload = {
+        "method": "submit",
+        "params": [
+            {
+                "tx_json": {
+                    "TransactionType": "Payment",
+                    "Account": sender,
+                    "Destination": receiver,
+                    "Amount": amount,
+                    "Memos": [{"Memo": {"MemoData": memo}} for memo in memos]
+                    if memos
+                    else [],
+                },
+                "secret": secret,
+            }
+        ],
+    }
+    # Send the request and get the response
+    response = requests.post(url, json=payload)
+    # Print the response status code and content
+    print(response.status_code)
+    print(response.content)
+    return str(response.content)
