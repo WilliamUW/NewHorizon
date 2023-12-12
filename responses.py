@@ -32,6 +32,7 @@ registerFlow = False
 connectFlow = False
 accountFlow = False
 phoneFlow = False
+flowTransactionFlow = False
 transactionFunction = makeXRPTransaction
 messageFunction = sendXRPMessage
 
